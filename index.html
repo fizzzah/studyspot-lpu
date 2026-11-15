@@ -1,1 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudySpot LPU - Library & Quiet Zone Booking</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <!-- Top Notice Bar -->
+  <div class="top-bar">
+    <span>Live Campus Portal | Central Library & Block 34 open 24/7 during exams</span>
+    <span>LPU Campus Network</span>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header class="navbar">
+    <div class="logo-box" onclick="showTab('venues')">
+      <h2>Study<span>Spot</span> <small>LPU</small></h2>
+      <p>Campus Quiet Desks & Library Booking</p>
+    </div>
+
+    <div class="nav-links">
+      <button id="btn-venues" class="active-btn" onclick="showTab('venues')">Browse Zones</button>
+      <button id="btn-map" onclick="showTab('map')">Desk Map</button>
+      <button id="btn-passes" onclick="showTab('passes')">My Pass</button>
+    </div>
+
+    <div class="active-desk-badge" onclick="showTab('passes')">
+      Active Desk: <strong id="navActiveDesk">None</strong>
+    </div>
+  </header>
+
+  <!-- Stats Section -->
+  <div class="stats-container">
+    <div class="stat-box">
+      <h3 id="freeDesksCount">68</h3>
+      <p>Available Desks</p>
+    </div>
+    <div class="stat-box">
+      <h3>4 / 4</h3>
+      <p>Silent Zones</p>
+    </div>
+    <div class="stat-box">
+      <h3>94%</h3>
+      <p>Power Plugs</p>
+    </div>
+    <div class="stat-box">
+      <h3 id="userBookingCount">0</h3>
+      <p>Your Bookings</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+
+    <!-- TAB 1: BROWSE ZONES -->
+    <div id="tab-venues">
+      <div class="search-box">
+        <input type="text" id="searchInput" onkeyup="filterZones()" placeholder="Search by block name (e.g., Central Library, Block 34, Block 36, UniMall)...">
+        <button onclick="resetSearch()">Reset</button>
+      </div>
+
+      <div class="cards-container">
+        <!-- Zone 1 -->
+        <div class="zone-card">
+          <div class="card-banner green-banner">Central Library</div>
+          <div class="card-body">
+            <h3>Central Library - 2nd Floor</h3>
+            <p>Pin-Drop Silence | Dual Power Outlets | Wi-Fi 6</p>
+            <span class="seat-tag">18 / 24 Free</span>
+            <button onclick="openZoneMap('Central Library - 2nd Floor')">Select Desk</button>
+          </div>
+        </div>
+
+        <!-- Zone 2 -->
+        <div class="zone-card">
+          <div class="card-banner blue-banner">Block 34 (CSE)</div>
+          <div class="card-body">
+            <h3>Block 34 - CSE Innovation Lounge</h3>
+            <p>Group Discussion | LAN Ports | Whiteboards</p>
+            <span class="seat-tag">16 / 24 Free</span>
+            <button onclick="openZoneMap('Block 34 - CSE Innovation Lounge')">Select Desk</button>
+          </div>
+        </div>
+
+        <!-- Zone 3 -->
+        <div class="zone-card">
+          <div class="card-banner purple-banner">Block 36</div>
+          <div class="card-body">
+            <h3>Block 36 - Quiet Study Pods</h3>
+            <p>Individual Focus Booths | Fast Charging</p>
+            <span class="seat-tag">14 / 24 Free</span>
+            <button onclick="openZoneMap('Block 36 - Quiet Study Pods')">Select Desk</button>
+          </div>
+        </div>
+
+        <!-- Zone 4 -->
+        <div class="zone-card">
+          <div class="card-banner orange-banner">UniMall</div>
+          <div class="card-body">
+            <h3>UniMall - Top Floor Reading Loft</h3>
+            <p>Late Night Access | Cafeteria Nearby | Wi-Fi 6</p>
+            <span class="seat-tag">20 / 24 Free</span>
+            <button onclick="openZoneMap('UniMall - Top Floor Reading Loft')">Select Desk</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: DESK MAP -->
+    <div id="tab-map" style="display: none;">
+      <div class="map-header">
+        <div>
+          <span class="badge">Floor Layout</span>
+          <h2 id="currentZoneHeading">Central Library - 2nd Floor</h2>
+        </div>
+
+        <select id="zoneDropdown" onchange="changeZoneHeading()">
+          <option value="Central Library - 2nd Floor">Central Library - 2nd Floor</option>
+          <option value="Block 34 - CSE Innovation Lounge">Block 34 - CSE Innovation Lounge</option>
+          <option value="Block 36 - Quiet Study Pods">Block 36 - Quiet Study Pods</option>
+          <option value="UniMall - Top Floor Reading Loft">UniMall - Top Floor Reading Loft</option>
+        </select>
+      </div>
+
+      <div class="map-layout">
+        <!-- Left Seat Grid -->
+        <div class="seat-board">
+          <div class="legend">
+            <span><span class="box free-box"></span> Available</span>
+            <span><span class="box taken-box"></span> Occupied</span>
+            <span><span class="box booked-box"></span> Your Booked Seat</span>
+          </div>
+
+          <div class="wall-banner">Front Window / Quiet Study Wall</div>
+
+          <div class="desk-row">
+            <button id="desk-A1" class="desk free" onclick="chooseDesk('A1', 'available')">A1<br><small>Free</small></button>
+            <button id="desk-A2" class="desk occupied" onclick="chooseDesk('A2', 'occupied')">A2<br><small>Taken</small></button>
+            <button id="desk-A3" class="desk free" onclick="chooseDesk('A3', 'available')">A3<br><small>Free</small></button>
+            <button id="desk-A4" class="desk free" onclick="chooseDesk('A4', 'available')">A4<br><small>Free</small></button>
+          </div>
+
+          <div class="desk-row">
+            <button id="desk-B1" class="desk occupied" onclick="chooseDesk('B1', 'occupied')">B1<br><small>Taken</small></button>
+            <button id="desk-B2" class="desk free" onclick="chooseDesk('B2', 'available')">B2<br><small>Free</small></button>
+            <button id="desk-B3" class="desk free" onclick="chooseDesk('B3', 'available')">B3<br><small>Free</small></button>
+            <button id="desk-B4" class="desk occupied" onclick="chooseDesk('B4', 'occupied')">B4<br><small>Taken</small></button>
+          </div>
+
+          <div class="desk-row">
+            <button id="desk-C1" class="desk free" onclick="chooseDesk('C1', 'available')">C1<br><small>Free</small></button>
+            <button id="desk-C2" class="desk free" onclick="chooseDesk('C2', 'available')">C2<br><small>Free</small></button>
+            <button id="desk-C3" class="desk occupied" onclick="chooseDesk('C3', 'occupied')">C3<br><small>Taken</small></button>
+            <button id="desk-C4" class="desk free" onclick="chooseDesk('C4', 'available')">C4<br><small>Free</small></button>
+          </div>
+        </div>
+
+        <!-- Right Desk Details Panel -->
+        <div class="desk-details">
+          <h3>Selected Desk Details</h3>
+          <p class="detail-row">Desk Number: <strong id="displayDeskCode">None Selected</strong></p>
+          <p class="detail-row">Status: <strong id="displayDeskStatus">--</strong></p>
+          <p class="detail-row">Power Socket: <strong>Available (220V)</strong></p>
+
+          <button id="bookNowBtn" class="disabled-btn" onclick="openBookingPopup()" disabled>Click a Green Desk First</button>
+
+          <p class="note-box"><strong>Note:</strong> Maintain strict silence inside the study zone and keep mobile phones on silent mode.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: MY PASS -->
+    <div id="tab-passes" style="display: none;">
+      <h2>My Active Study Pass</h2>
+      <p class="subtext">Show this digital pass at the library desk if requested.</p>
+
+      <div id="noPassMessage" class="empty-pass">
+        <h3>No Active Desk Reservation</h3>
+        <p>You have not booked any study desk yet.</p>
+        <button onclick="showTab('map')">Book a Desk Now</button>
+      </div>
+
+      <div id="activePassCard" class="pass-card" style="display: none;">
+        <div class="pass-top">
+          <div>
+            <span class="confirmed-tag">Confirmed Pass</span>
+            <h3 id="passZoneName">Central Library - 2nd Floor</h3>
+          </div>
+          <div class="pass-seat">
+            <small>DESK CODE</small>
+            <h2 id="passDeskCode">A1</h2>
+          </div>
+        </div>
+
+        <div class="pass-info">
+          <p><strong>Student Name:</strong> <span id="passStudentName">--</span></p>
+          <p><strong>LPU Registration No.:</strong> <span id="passStudentReg">--</span></p>
+          <p><strong>Booked Duration:</strong> <span id="passDuration">--</span></p>
+        </div>
+
+        <button class="cancel-btn" onclick="cancelBooking()">Cancel & Release Desk</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Booking Popup Form -->
+  <div id="bookingPopup" class="popup-overlay" style="display: none;">
+    <div class="popup-box">
+      <div class="popup-header">
+        <h3>Reserve Study Desk</h3>
+        <span class="close-x" onclick="closeBookingPopup()">X</span>
+      </div>
+
+      <div class="popup-form">
+        <p class="selected-label">Booking Desk: <strong id="popupDeskLabel">--</strong></p>
+
+        <label>Student Full Name *</label>
+        <input type="text" id="inputName" placeholder="Enter your name">
+
+        <label>LPU Registration Number (8 Digits) *</label>
+        <input type="text" id="inputReg" maxlength="8" placeholder="e.g. 12612978">
+
+        <label>Select Duration</label>
+        <select id="inputDuration">
+          <option value="1 Hour">1 Hour</option>
+          <option value="2 Hours">2 Hours</option>
+          <option value="3 Hours">3 Hours</option>
+          <option value="4 Hours">4 Hours</option>
+        </select>
+
+        <div class="popup-buttons">
+          <button type="button" class="btn-secondary" onclick="closeBookingPopup()">Cancel</button>
+          <button type="button" class="btn-primary" onclick="confirmBooking()">Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p><strong>StudySpot LPU</strong> | Smart Campus Quiet Zone Booking - Lovely Professional University, Punjab</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
