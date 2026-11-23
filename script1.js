@@ -145,7 +145,9 @@ function cancelBooking() {
   document.getElementById("activePassCard").style.display = "none";
 
   document.getElementById("navActiveDesk").innerText = "None";
+
   document.getElementById("userBookingCount").innerText = "0";
   document.getElementById("freeDesksCount").innerText = "68";
 
   alert("Your reservation has been cancelled and the desk is now free.");
+}
